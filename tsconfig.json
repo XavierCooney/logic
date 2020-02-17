@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "noEmit": true,
+        "watch": true,
+        "lib": [
+            "DOM",
+            "ES2018"
+        ],
+        "strictNullChecks": true,
+        "downlevelIteration": true
+    },
+    "include": [
+        "./src/"
+    ],
+
+}

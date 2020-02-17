@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xavier's Logic Engine</title>
+    <script src="./index.ts"></script>
+    <script src="./t.ts"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 1em;
+            display: flex;
+            flex-direction: column;
+        }
+        .big-box {
+            padding: 1em;
+            border-radius: 10px;
+            background-color: #DDD;
+            margin: 1em;
+        }
+        .inner-input-box {
+            padding: 0.2em;
+            padding-left: 1em;
+            border-radius: 10px;
+            background-color: #BBB;
+        }
+        .logic-input-line {
+            /* a */
+            display: flex;
+            flex-direction: row;
+        }
+        .logic-input {
+            padding: 0.3em;
+            margin: 0.3em;
+            font-size: 2em;
+            border-radius: 10px;
+            flex: 2;
+        }
+        #variable-logic-input {
+            font-family: monospace;
+        }
+        .logic-ouput {
+            color: #F00;
+            font-size: large;
+            font-style: italic;
+        }
+        .virt-btn-keyboard button {
+            margin: 2px;
+            padding: 0.4em;
+            font-size: 1.5em;
+            border-radius: 4px;
+        }
+        #options-panel label {
+            float: right;
+        }
+        #options-panel button {
+            float: right;
+            margin: 2px;
+            padding: 0.4em;
+            font-size: 1em;
+            border-radius: 4px;
+        }
+        #options-panel {
+            margin: 1em;
+        }
+        .logic-output-err {
+            padding: 1em;
+            background: black;
+            border-radius: 5px;
+            color: red;
+            margin-top: 1em;
+        }
+        .logic-output-err:empty {
+            display: none;
+        }
+        #make-new-assumption {
+            margin: 2px;
+            padding: 0.4em;
+            font-size: 1.5em;
+            border-radius: 4px;
+            background-color: blue;
+            color: white;
+        }
+        button.logic-remove-premise {
+            margin: 2px;
+            padding: 0.2em;
+            font-size: 1.3em;
+            border-radius: 4px;
+        }
+        .all-good {
+            background-color: #1A1;
+            color: white;
+        }
+        label {
+            border: 1px solid black;
+            padding: 0.5em;
+            margin-right: 0.5em;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="options-panel">
+        <h1>Xavier's Propositional Logic Analyser v2.1</h1>
+        <button id="share-btn">
+            <b>Share/Save</b>
+        </button>
+        <label>
+            Logic Symbols Synonyms
+            <input type="checkbox" id="option-logic-symbols-synonyms">
+        </label>
+        <label>
+            Logic Symbols Hints
+            <input type="checkbox" id="option-logic-symbols-hints">
+        </label>
+    </div>
+    <div class="big-box">
+        <div class="inner-input-box variables-input-box">
+            <div class="logic-input-line">
+                <h2>Variables</h2>
+                <input class="logic-input" id="variable-logic-input">
+            </div>
+            <div id="variable-select-btns" class="virt-btn-keyboard"></div>
+        </div>
+    </div>
+
+    <button id="make-new-assumption">New Premise</button>
+
+    <div class="big-box conclusions-input-box">
+        <div class="inner-input-box">
+            <div class="logic-input-line">
+                <h2>Conclusions</h2>
+                <input class="logic-input" id="logic-conclusion-input">
+            </div>
+            <div id="conclusions-select-btns" class="virt-btn-keyboard virt-btn-logic-symbs"></div>
+        </div>
+        <div class="logic-output-err"></div>
+    </div>
+</body>
+</html>
