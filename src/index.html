@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xavier's Logic Engine</title>
     <script src="./index.ts"></script>
-    <script src="./t.ts"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -54,11 +53,11 @@
         #options-panel label {
             float: right;
         }
-        #options-panel button {
+        #share-btn {
             float: right;
             margin: 2px;
             padding: 0.4em;
-            font-size: 1em;
+            font-size: 1.3em;
             border-radius: 4px;
         }
         #options-panel {
@@ -83,10 +82,12 @@
             color: white;
         }
         button.logic-remove-premise {
-            margin: 2px;
             padding: 0.2em;
-            font-size: 1.3em;
+            font-size: 1em;
             border-radius: 4px;
+            margin: 0.3em;
+            margin-top: 0.8em;
+            margin-bottom: 0.8em;
         }
         .all-good {
             background-color: #1A1;
@@ -97,12 +98,42 @@
             padding: 0.5em;
             margin-right: 0.5em;
             border-radius: 10px;
+            font-size: 1.1em;
+            min-height: 2em;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        #load-example-btn {
+            margin: 2px;
+            font-size: 1em;
+            border-radius: 4px;
+        }
+        #example-select {
+            padding: 0.3em;
+            margin-right: 0.5em;
+        }
+        #example-loaded-msg {
+            font-size: 1.5em;
+        }
+        #example-loaded-msg:empty {
+            display: none
+        }
+        hr {
+            border: solid 1px #000;
+            color: #000;
+            height: 2px;
+            width: 100%;
+            background-color: #000;
+        }
+        #sauce-msg {
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div id="options-panel">
-        <h1>Xavier's Propositional Logic Analyser v2.1</h1>
+        <h1>Xavier's Propositional Logic Analyser v2.2</h1>
         <button id="share-btn">
             <b>Share/Save</b>
         </button>
@@ -114,7 +145,14 @@
             Logic Symbols Hints
             <input type="checkbox" id="option-logic-symbols-hints">
         </label>
+        <label>
+            <select id="example-select">
+                
+            </select>
+            <button id="load-example-btn">Load Example</button>
+        </label>
     </div>
+    <h2 id="example-loaded-msg"></h2>
     <div class="big-box">
         <div class="inner-input-box variables-input-box">
             <div class="logic-input-line">
@@ -130,12 +168,16 @@
     <div class="big-box conclusions-input-box">
         <div class="inner-input-box">
             <div class="logic-input-line">
-                <h2>Conclusions</h2>
+                <h2>Conclusion</h2>
                 <input class="logic-input" id="logic-conclusion-input">
             </div>
             <div id="conclusions-select-btns" class="virt-btn-keyboard virt-btn-logic-symbs"></div>
         </div>
         <div class="logic-output-err"></div>
+    </div>
+    <hr>
+    <div id="sauce-msg">
+        Open source at <a href="https://github.com/XavierCooney/logic/">https://github.com/XavierCooney/logic/</a>
     </div>
 </body>
 </html>

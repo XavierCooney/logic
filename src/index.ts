@@ -1,6 +1,8 @@
 // @ts-check
 'ust strict';
 
+console.log("Open source at https://github.com/XavierCooney/logic/");
+
 function assert(condition: any, msg?: string): asserts condition {
     if (!condition) {
         throw new Error(msg)
@@ -11,6 +13,15 @@ const COMMON_VAR_NAMES = [
     'p', 'q', 'r', 's', 'a', 'b', 'x', 'y'
 ];
 
+const EXAMPLES = [
+    { "v": ["p", "q"], "a": ["p → q", "p"], "c": "q", "name": "Modus ponens" },
+    { "v": ["p", "q"], "a": ["p → q", "¬q"], "c": "¬p", "name": "Modus tollens" },
+    { "v": ["p", "q"], "a": ["p → q", "q → p"], "c": "p ↔ q", "name": "Biconditional introduction" },
+    { "v": ["p", "q"], "a": ["¬(p ∧ q)", "p"], "c": "¬q", "name": "Modus ponendo tollens" },
+    { "v": ["p", "q"], "a": ["p → q", "¬p"], "c": "¬q", "name": "Fallacy: Denying the antecedent" },
+    { "v": ["p", "q"], "a": ["p → q", "q"], "c": "p", "name": "Fallacy: Affirming the consequent" },
+    { "v": ["p", "q"], "a": ["p ∨ q", "q"], "c": "¬p", "name": "Fallacy: Affirming a disjunct" }
+];
 
 let variables_selected: string[] = [];
 
@@ -227,7 +238,6 @@ class Parser {
                 assert(e.expr);
                 e = new ParseResult(new NotExpression(e.expr), e.msg);
                 num_nots -= 1;
-                console.log(num_nots);
             }
             return e;
         } else if(fixity == 3) {
@@ -333,7 +343,6 @@ function on_variable_list_change() {
     let arrays_match = split_input.length == variables_selected.length && split_input.every((v, i) => {
         return v === variables_selected[i];
     });
-    console.log(arrays_match, split_input, variables_selected);
     if(!arrays_match) {
         variables_selected = split_input;
         render_selected_vars();
@@ -420,7 +429,6 @@ function load_logic_symbol_buttons() {
             button.innerText = symbol[1] + (hints_enabled && symbol[2] ? " (" + symbol[2] + ")" : "");
             button.addEventListener('click', () => {
                 let container_parent = container.parentElement;
-                console.log(container_parent);
                 let input_el = container_parent.getElementsByClassName('logic-input-line')[0].getElementsByClassName('logic-input')[0];
                 let old_pos = input_el.selectionStart;
                 input_el.value = input_el.value.slice(0, input_el.selectionStart) + symbol[0] + input_el.value.slice(input_el.selectionStart);
@@ -490,7 +498,6 @@ function recalculate() {
                 x.push(`¬${var_name}`);
             }
         }
-        console.log(assignments, x.join(', '));
         return x.join(', ');
     }
 
@@ -554,6 +561,23 @@ function load_logic_inputs() {
     }
 }
 
+function load_data(variables: string[], assumptions: string[], conclusion: string) {
+    variables_selected = variables.slice(0);
+
+    (<HTMLInputElement>document.getElementById('logic-conclusion-input')).value = conclusion
+
+    Array.from(document.getElementsByClassName('premises-input-box')).forEach((el) => {
+        el.remove();
+    });
+
+    for(let assumption_line of assumptions) {
+        make_new_premise(assumption_line);
+    }
+
+    render_selected_vars();
+    schedule_recalc();
+}
+
 function load_from_url() {
     let url = new URL(window.location.href);
     let encoded = url.searchParams.get("s");
@@ -563,13 +587,7 @@ function load_from_url() {
     console.log(`JSON: ${decoded_json}`);
     let decoded_object: {'v': string[], 'a': string[], 'c': string} = JSON.parse(decoded_json);
     
-    variables_selected = decoded_object['v'];
-    (<HTMLInputElement>document.getElementById('logic-conclusion-input')).value = decoded_object['c'];
-    for(let assumption_line of decoded_object['a']) {
-        make_new_premise(assumption_line);
-    }
-
-    schedule_recalc();
+    load_data(decoded_object['v'], decoded_object['a'], decoded_object['c']);
 }
 
 function make_new_premise(contents: string) {
@@ -594,6 +612,28 @@ function make_new_premise(contents: string) {
     schedule_recalc();
 }
 
+function convert_system_to_object() {
+    let obj: {'v': string[], 'a': string[], 'c': string} = {'v': [], 'a': [], 'c': ""};
+    obj.v = variables_selected;
+
+    function get_logic_lines(name: string) {
+        let outer_el = (Array.prototype.slice.call(document.getElementsByClassName(name)));
+        return outer_el.map((el) => (el.getElementsByClassName('logic-input')[0]).value);
+    }
+    obj.a = get_logic_lines('premises-input-box');
+    obj.c = get_logic_lines('conclusions-input-box')[0];
+
+    return obj;
+}
+
+// Quick example generator function
+declare interface Window {
+    convert_system_to_object_str: any;
+}
+window.convert_system_to_object_str = function() {
+    return JSON.stringify(convert_system_to_object());
+}
+
 window.addEventListener('load', () => {
     load_from_url();
     render_selected_vars();
@@ -604,6 +644,7 @@ window.addEventListener('load', () => {
     variable_logic_input.addEventListener('input', on_variable_list_change);
 
     load_logic_inputs();
+
     document.getElementById('option-logic-symbols-hints')?.addEventListener('click', load_logic_symbol_buttons);
     document.getElementById('option-logic-symbols-synonyms')?.addEventListener('click', load_logic_symbol_buttons);
 
@@ -612,17 +653,7 @@ window.addEventListener('load', () => {
     });
 
     document.getElementById('share-btn')?.addEventListener('click', () => {
-        let obj: {'v': string[], 'a': string[], 'c': string} = {'v': [], 'a': [], 'c': ""};
-        obj.v = variables_selected;
-
-        function get_logic_lines(name: string) {
-            let outer_el = (Array.prototype.slice.call(document.getElementsByClassName(name)));
-            return outer_el.map((el) => (el.getElementsByClassName('logic-input')[0]).value);
-        }
-        obj.a = get_logic_lines('premises-input-box');
-        obj.c = get_logic_lines('conclusions-input-box')[0];
-
-        let encoded = btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+        let encoded = btoa(unescape(encodeURIComponent(JSON.stringify(convert_system_to_object()))));
         let current_url_without_search = window.location.href.slice(
             0,
             window.location.href.length - window.location.search.length
@@ -631,5 +662,17 @@ window.addEventListener('load', () => {
             "Please share/save this URL to return to your logic system:",
             `${current_url_without_search}?s=${window.encodeURIComponent(encoded)}`
         );
+    });
+
+    for(let example of EXAMPLES) {
+        let option = document.createElement('option');
+        option.innerText = example.name;
+        document.getElementById('example-select')?.appendChild(option);
+    }
+    document.getElementById('load-example-btn')?.addEventListener('click', () => {
+        let index = (<HTMLSelectElement>document.getElementById('example-select')).selectedIndex;
+        (<HTMLElement>document.getElementById('example-loaded-msg')).innerText =
+            `Example Loaded: ${EXAMPLES[index].name}`;
+        load_data(EXAMPLES[index].v, EXAMPLES[index].a, EXAMPLES[index].c);
     });
 });
