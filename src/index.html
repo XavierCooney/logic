@@ -129,11 +129,18 @@
         #sauce-msg {
             text-align: center;
         }
+        #example-loaded-msg-modified {
+            font-style: italic;
+            margin-top: 0.3em;
+        }
+        #example-loaded-msg {
+            margin-bottom: 0.3em;
+        }
     </style>
 </head>
 <body>
     <div id="options-panel">
-        <h1>Xavier's Propositional Logic Analyser v2.2</h1>
+        <h1>Xavier's Propositional Logic Analyser v2.2.1</h1>
         <button id="share-btn">
             <b>Share/Save</b>
         </button>
@@ -153,6 +160,8 @@
         </label>
     </div>
     <h2 id="example-loaded-msg"></h2>
+    <h4 id="example-loaded-msg-modified" style="display: none">(Example modified)</h4>
+
     <div class="big-box">
         <div class="inner-input-box variables-input-box">
             <div class="logic-input-line">
@@ -177,7 +186,8 @@
     </div>
     <hr>
     <div id="sauce-msg">
-        Open source at <a href="https://github.com/XavierCooney/logic/">https://github.com/XavierCooney/logic/</a>
+        Open source at <a href="https://github.com/XavierCooney/logic/">https://github.com/XavierCooney/logic/</a> <br>
+        © Xavier Cooney 2020. <a href="https://github.com/XavierCooney/logic/blob/master/LICENSE">Licensed under 2-Clause BSD</a>.
     </div>
 </body>
 </html>

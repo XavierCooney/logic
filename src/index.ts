@@ -12,6 +12,7 @@ function assert(condition: any, msg?: string): asserts condition {
 const COMMON_VAR_NAMES = [
     'p', 'q', 'r', 's', 'a', 'b', 'x', 'y'
 ];
+let example_has_been_loaded = false;
 
 const EXAMPLES = [
     { "v": ["p", "q"], "a": ["p → q", "p"], "c": "q", "name": "Modus ponens" },
@@ -443,6 +444,12 @@ function load_logic_symbol_buttons() {
 }
 
 function schedule_recalc() {
+    if(example_has_been_loaded) {
+        let msg_box = document.getElementById('example-loaded-msg-modified');
+        if(msg_box) {
+            msg_box.style.display = '';
+        }
+    }
     setTimeout(recalculate, 10);
 }
 
@@ -576,6 +583,11 @@ function load_data(variables: string[], assumptions: string[], conclusion: strin
 
     render_selected_vars();
     schedule_recalc();
+
+    let msg_box = document.getElementById('example-loaded-msg-modified');
+    if(msg_box) {
+        msg_box.style.display = 'none';
+    }
 }
 
 function load_from_url() {
@@ -586,7 +598,8 @@ function load_from_url() {
     let decoded_json = decodeURIComponent(escape(atob(decodeURIComponent(encoded))));
     console.log(`JSON: ${decoded_json}`);
     let decoded_object: {'v': string[], 'a': string[], 'c': string} = JSON.parse(decoded_json);
-    
+
+    example_has_been_loaded = true;
     load_data(decoded_object['v'], decoded_object['a'], decoded_object['c']);
 }
 
