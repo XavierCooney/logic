@@ -21,10 +21,17 @@ const EXAMPLES = [
     { "v": ["p", "q"], "a": ["¬(p ∧ q)", "p"], "c": "¬q", "name": "Modus ponendo tollens" },
     { "v": ["p", "q", "r"], "a": ["((p → q) ∧ (q → r))"], "c": "(p → r)", "name": "Hypothetical Syllogism" },
     { "v": ["p", "q"], "a": ["((p ∨ q) ∧ ¬p)"], "c": "q", "name": "Disjunctive Syllogism" },
+    { "v": ["p", "q", "r", "s"], "a": ["(p → q) ∧ (r → s)", "p ∨ r"], "c": "q ∨ s", "name": "Constructive Dilemma" },
+    { "v": ["p", "q", "r", "s"], "a": ["(p → q) ∧ (r → s)", "¬q ∨ ¬s"], "c": "¬p ∨ ¬r", "name": "Destructive Dilemma" },
+    { "v": ["p", "q", "r"], "a": ["(p → q) ∧ (p → r)"], "c": "p → (q ∧ r)", "name": "Composition" },
+    { "v": ["p", "q"], "a": [], "c": "(¬(p ∧ q) ↔ (¬p ∨ ¬q)) ∧ (¬(p ∨ q) ↔ (¬p ∧ ¬q))", "name": "De Morgan's Laws" },
+    { "v": ["p", "q", "r"], "a": [], "c": "((p ∧ q) → r) ↔ (p → (q → r))", "name": "Importation & Exportation" },
+    { "v": ["p"], "a": [], "c": "p ∨ ¬p", "name": "Tertium non datur" },
     { "v": ["p", "q", "r"], "a": [], "c": "(p → (q → p)) ∧ ((p → (q → r) → ((p → q) → (p → r))) ∧ ((¬p → ¬q) → (q → p)))", "name": "Jan Łukasiewicz's Axioms" },
     { "v": ["p", "q"], "a": ["p → q", "¬p"], "c": "¬q", "name": "Fallacy: Denying the antecedent" },
     { "v": ["p", "q"], "a": ["p → q", "q"], "c": "p", "name": "Fallacy: Affirming the consequent" },
-    { "v": ["p", "q"], "a": ["p ∨ q", "q"], "c": "¬p", "name": "Fallacy: Affirming a disjunct" }
+    { "v": ["p", "q"], "a": ["p ∨ q", "q"], "c": "¬p", "name": "Fallacy: Affirming a disjunct" },
+    { "v": ["p", "q"], "a": ["p ∧ ¬p"], "c": "q", "name": "Principle of Explosion" }
 ];
 
 let variables_selected: string[] = [];
@@ -408,9 +415,8 @@ function load_logic_symbol_buttons() {
         ['⊥', '⊥', 'contradiction']
     ];
     let ADDITIONAL = [
-        [' = ', '=', 'equals'],
+        [' = ', '=', 'is equilivant to'],
         [' ≡ ', '≡', 'if and only if'],
-        [' ⊨ ', '⊨', 'semantically entails'],
         ['T', 'T', 'true'],
         ['F', 'F', 'false']
         // [' = ', '=', 'equals']
