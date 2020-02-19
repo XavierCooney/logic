@@ -19,6 +19,9 @@ const EXAMPLES = [
     { "v": ["p", "q"], "a": ["p → q", "¬q"], "c": "¬p", "name": "Modus tollens" },
     { "v": ["p", "q"], "a": ["p → q", "q → p"], "c": "p ↔ q", "name": "Biconditional introduction" },
     { "v": ["p", "q"], "a": ["¬(p ∧ q)", "p"], "c": "¬q", "name": "Modus ponendo tollens" },
+    { "v": ["p", "q", "r"], "a": ["((p → q) ∧ (q → r))"], "c": "(p → r)", "name": "Hypothetical Syllogism" },
+    { "v": ["p", "q"], "a": ["((p ∨ q) ∧ ¬p)"], "c": "q", "name": "Disjunctive Syllogism" },
+    { "v": ["p", "q", "r"], "a": [], "c": "(p → (q → p)) ∧ ((p → (q → r) → ((p → q) → (p → r))) ∧ ((¬p → ¬q) → (q → p)))", "name": "Jan Łukasiewicz's Axioms" },
     { "v": ["p", "q"], "a": ["p → q", "¬p"], "c": "¬q", "name": "Fallacy: Denying the antecedent" },
     { "v": ["p", "q"], "a": ["p → q", "q"], "c": "p", "name": "Fallacy: Affirming the consequent" },
     { "v": ["p", "q"], "a": ["p ∨ q", "q"], "c": "¬p", "name": "Fallacy: Affirming a disjunct" }
@@ -599,7 +602,6 @@ function load_from_url() {
     console.log(`JSON: ${decoded_json}`);
     let decoded_object: {'v': string[], 'a': string[], 'c': string} = JSON.parse(decoded_json);
 
-    example_has_been_loaded = true;
     load_data(decoded_object['v'], decoded_object['a'], decoded_object['c']);
 }
 
@@ -686,6 +688,7 @@ window.addEventListener('load', () => {
         let index = (<HTMLSelectElement>document.getElementById('example-select')).selectedIndex;
         (<HTMLElement>document.getElementById('example-loaded-msg')).innerText =
             `Example Loaded: ${EXAMPLES[index].name}`;
+        example_has_been_loaded = true;
         load_data(EXAMPLES[index].v, EXAMPLES[index].a, EXAMPLES[index].c);
     });
 });
