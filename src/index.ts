@@ -34,6 +34,8 @@ const EXAMPLES = [
     { "v": ["p", "q"], "a": ["p ∧ ¬p"], "c": "q", "name": "Principle of Explosion" }
 ];
 
+console.log(`${EXAMPLES.length} examples laoded`);
+
 let variables_selected: string[] = [];
 
 abstract class Expression {
@@ -415,7 +417,7 @@ function load_logic_symbol_buttons() {
         ['⊥', '⊥', 'contradiction']
     ];
     let ADDITIONAL = [
-        [' = ', '=', 'is equilivant to'],
+        [' = ', '=', 'is equivalent to'],
         [' ≡ ', '≡', 'if and only if'],
         ['T', 'T', 'true'],
         ['F', 'F', 'false']
@@ -514,7 +516,10 @@ function recalculate() {
                 x.push(`¬${var_name}`);
             }
         }
-        return x.join(', ');
+        if(x.length == 0) {
+            return " for empty set";
+        }
+        return "for " + x.join(', ');
     }
 
     function check(assignments: { [pronumeral: string]: boolean}) {
@@ -526,7 +531,7 @@ function recalculate() {
 
         for(let expr of conclusion_expressions) {
             if(!expr.e.evaluate(assignments)) {
-                expr.b.innerText += "Case failed for " + make_context(assignments) + "\n";
+                expr.b.innerText += "Case failed " + make_context(assignments) + "\n";
             }
         }
     }
@@ -547,9 +552,12 @@ function recalculate() {
     resolve(variables_selected, {});
 
     for(let conclusion_expr of conclusion_expressions) {
+        console.log(conclusion_expr.b.innerText);
         if(conclusion_expr.b.innerText == "") {
             conclusion_expr.b.classList.add("all-good");
-            conclusion_expr.b.innerText = "All cases correct ✅";
+            conclusion_expr.b.innerText = "✅ All cases correct";
+        } else {
+            conclusion_expr.b.innerText = "❌ " + conclusion_expr.b.innerText;
         }
     }
 }
