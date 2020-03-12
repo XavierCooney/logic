@@ -15,6 +15,37 @@ const COMMON_VAR_NAMES = [
 let example_has_been_loaded = false;
 
 const EXAMPLES = [
+    { "t": "frege", "v": ["a", "b"], "a": ["a"], "c": "b → a", "name": "Proposition 1" },
+    { "t": "frege", "v": ["a", "b", "c"], "a": ["c → (b → a)"], "c": "(c → b) → (c → a)", "name": "Proposition 2" },
+    { "t": "frege", "v": ["a", "b", "c"], "a": ["b → a"], "c": "(c → (b → a)) → ((c → b) → (c → a))", "name": "Proposition 3" },
+    { "t": "frege", "v": ["a", "b", "c"], "a": ["(b → a) → (c → (b → a))"], "c": "(b → a) → ((c → b) → (c → a))", "name": "Proposition 4" },
+    { "t": "frege", "v": ["a", "b", "c"], "a": ["b → a"], "c": "((c → b) → (c → a))", "name": "Proposition 5" },
+    { "t": "frege", "v": ["a", "b", "c", "d"], "a": ["c → (b → a)"], "c": "c → ((d → b) → (d → a))", "name": "Proposition 6" },
+    { "t": "frege", "v": ["a", "b", "c", "d"], "a": ["b → a"], "c": "(d → (c → b)) → (d → (c → a))", "name": "Proposition 7" },
+    { "t": "frege", "v": ["a", "b", "c", "d"], "a": ["d → (b → a)"], "c": "b → (d → a)", "name": "Proposition 8" },
+    { "t": "frege", "v": ["a", "b", "c", "d"], "a": ["c → b"], "c": "(b → a) → (c → a)", "name": "Proposition 9" },
+    { "t": "frege", "v": ["a", "b", "c", "d", "e"], "a": ["(e → (d → b)) → a"], "c": "(d → (e → b)) → a", "name": "Proposition 10" },
+    { "t": "example", "v": ["p", "q"], "a": ["p → q", "p"], "c": "q", "name": "Modus ponens" },
+    { "t": "example", "v": ["p", "q"], "a": ["p → q", "¬q"], "c": "¬p", "name": "Modus tollens" },
+    { "t": "example", "v": ["p", "q"], "a": ["p → q", "q → p"], "c": "p ↔ q", "name": "Biconditional introduction" },
+    { "t": "example", "v": ["p", "q"], "a": ["¬(p ∧ q)", "p"], "c": "¬q", "name": "Modus ponendo tollens" },
+    { "t": "example", "v": ["p", "q", "r"], "a": ["((p → q) ∧ (q → r))"], "c": "(p → r)", "name": "Hypothetical Syllogism" },
+    { "t": "example", "v": ["p", "q"], "a": ["((p ∨ q) ∧ ¬p)"], "c": "q", "name": "Disjunctive Syllogism" },
+    { "t": "example", "v": ["p", "q", "r", "s"], "a": ["(p → q) ∧ (r → s)", "p ∨ r"], "c": "q ∨ s", "name": "Constructive Dilemma" },
+    { "t": "example", "v": ["p", "q", "r", "s"], "a": ["(p → q) ∧ (r → s)", "¬q ∨ ¬s"], "c": "¬p ∨ ¬r", "name": "Destructive Dilemma" },
+    { "t": "example", "v": ["p", "q", "r"], "a": ["(p → q) ∧ (p → r)"], "c": "p → (q ∧ r)", "name": "Composition" },
+    { "t": "example", "v": ["p", "q"], "a": [], "c": "(¬(p ∧ q) ↔ (¬p ∨ ¬q)) ∧ (¬(p ∨ q) ↔ (¬p ∧ ¬q))", "name": "De Morgan's Laws" },
+    { "t": "example", "v": ["p", "q", "r"], "a": [], "c": "((p ∧ q) → r) ↔ (p → (q → r))", "name": "Importation & Exportation" },
+    { "t": "example", "v": ["p"], "a": [], "c": "p ∨ ¬p", "name": "Tertium non datur" },
+    { "t": "example", "v": ["p", "q"], "a": ["p → (q ∧ ¬q)"], "c": "¬p", "name": "Proof by Contradiction" },
+    { "t": "example", "v": ["p", "q"], "a": ["p ∧ ¬p"], "c": "q", "name": "Principle of Explosion" },
+    { "t": "example", "v": ["p", "q", "r"], "a": [], "c": "(p → (q → p)) ∧ ((p → (q → r) → ((p → q) → (p → r))) ∧ ((¬p → ¬q) → (q → p)))", "name": "Jan Łukasiewicz's Axioms" },
+    { "t": "fallacy", "v": ["p", "q"], "a": ["p → q", "¬p"], "c": "¬q", "name": "Fallacy: Denying the antecedent" },
+    { "t": "fallacy", "v": ["p", "q"], "a": ["p → q", "q"], "c": "p", "name": "Fallacy: Affirming the consequent" },
+    { "t": "fallacy", "v": ["p", "q"], "a": ["p ∨ q", "q"], "c": "¬p", "name": "Fallacy: Affirming a disjunct" },
+];
+
+const FREGE_EXAMPLES = [
     { "v": ["p", "q"], "a": ["p → q", "p"], "c": "q", "name": "Modus ponens" },
     { "v": ["p", "q"], "a": ["p → q", "¬q"], "c": "¬p", "name": "Modus tollens" },
     { "v": ["p", "q"], "a": ["p → q", "q → p"], "c": "p ↔ q", "name": "Biconditional introduction" },
@@ -27,12 +58,14 @@ const EXAMPLES = [
     { "v": ["p", "q"], "a": [], "c": "(¬(p ∧ q) ↔ (¬p ∨ ¬q)) ∧ (¬(p ∨ q) ↔ (¬p ∧ ¬q))", "name": "De Morgan's Laws" },
     { "v": ["p", "q", "r"], "a": [], "c": "((p ∧ q) → r) ↔ (p → (q → r))", "name": "Importation & Exportation" },
     { "v": ["p"], "a": [], "c": "p ∨ ¬p", "name": "Tertium non datur" },
+    { "v": ["p", "q"], "a": ["p → (q ∧ ¬q)"], "c": "¬p", "name": "Proof by Contradiction" },
     { "v": ["p", "q", "r"], "a": [], "c": "(p → (q → p)) ∧ ((p → (q → r) → ((p → q) → (p → r))) ∧ ((¬p → ¬q) → (q → p)))", "name": "Jan Łukasiewicz's Axioms" },
     { "v": ["p", "q"], "a": ["p → q", "¬p"], "c": "¬q", "name": "Fallacy: Denying the antecedent" },
     { "v": ["p", "q"], "a": ["p → q", "q"], "c": "p", "name": "Fallacy: Affirming the consequent" },
     { "v": ["p", "q"], "a": ["p ∨ q", "q"], "c": "¬p", "name": "Fallacy: Affirming a disjunct" },
     { "v": ["p", "q"], "a": ["p ∧ ¬p"], "c": "q", "name": "Principle of Explosion" }
 ];
+
 
 console.log(`${EXAMPLES.length} examples laoded`);
 
@@ -696,8 +729,9 @@ window.addEventListener('load', () => {
     for(let example of EXAMPLES) {
         let option = document.createElement('option');
         option.innerText = example.name;
-        document.getElementById('example-select')?.appendChild(option);
+        document.getElementById(`example-${example.t}`)?.appendChild(option);
     }
+
     document.getElementById('load-example-btn')?.addEventListener('click', () => {
         let index = (<HTMLSelectElement>document.getElementById('example-select')).selectedIndex;
         (<HTMLElement>document.getElementById('example-loaded-msg')).innerText =
